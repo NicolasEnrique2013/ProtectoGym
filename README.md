@@ -2,7 +2,7 @@
 
 ## 👥 Integrantes - Grupo [Número de grupo]
 * **Miño, Nicolas** - [30999/39776908]
-* **Apellido, Nombre** - [Legajo/DNI]
+* **Davila, Matias** - [23714/3335384]
 
 ## 📝 Descripción del Proyecto
 Este programa fue desarrollado en Python como parte de la materia [Nombre de la Materia] en la [Nombre de la Facultad]. El objetivo es administrar los socios, el control de cuotas, las inscripciones a actividades y las asistencias de un gimnasio mediante una interfaz interactiva por consola.
