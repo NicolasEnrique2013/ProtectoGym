@@ -5,7 +5,7 @@
 * **Davila, Matias** - [23714/3335384]
 
 ## 📝 Descripción del Proyecto
-Este programa fue desarrollado en Python como parte de la materia [Nombre de la Materia] en la [Nombre de la Facultad]. El objetivo es administrar los socios, el control de cuotas, las inscripciones a actividades y las asistencias de un gimnasio mediante una interfaz interactiva por consola.
+Este programa fue desarrollado en Python como parte de la materia Algoritmos y Estuctura de Datos en la UTN-Resistencia. El objetivo es administrar los socios, el control de cuotas, las inscripciones a actividades y las asistencias de un gimnasio mediante una interfaz interactiva por consola.
 
 ## 🚀 Cómo Funciona el Programa
 Al ejecutar el archivo `ProyectoGymPass.py`, el sistema despliega un menú interactivo en la terminal. El usuario puede navegar por las siguientes opciones ingresando el número correspondiente:
@@ -15,10 +15,11 @@ Al ejecutar el archivo `ProyectoGymPass.py`, el sistema despliega un menú inter
 3. **Inscripción a Actividades:** Asigna a los socios a disciplinas como Spinning o Crossfit según la capacidad disponible.
 4. **Control de Asistencia:** Registra el ingreso diario. Si el socio debe la cuota, el sistema le deniega el acceso.
 5. **Estadísticas:** Muestra reportes básicos de concurrencia diaria y cantidad total de socios activos.
+6. **Listar Socios:** Muesta un listado general de los socios registrados.
 
 ## 🛠️ Tecnologías Utilizadas
 * **Lenguaje:** Python 3.x
-* **Conceptos aplicados:** Estructuras de control (`if`, `while`), modularización (funciones), tipos de datos complejos (listas y diccionarios) y validación de datos de entrada.
+* **Conceptos aplicados:** Estructuras de control (`if`, `while`), modularización (funciones), tipos de datos complejos (listas y diccionarios) , validación de datos de entrada y Manejo de Archivos
 
 ## 💻 Instrucciones para Ejecutarlo
 Para correr este programa en tu computadora, asegurate de tener Python instalado y seguí estos pasos:
