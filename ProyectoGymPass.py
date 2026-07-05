@@ -1,3 +1,134 @@
+import datetime
+import json  # <Importamos la librería para manejar archivos
+class Socio:
+    def __init__(self, dni, nombre, tipo_membresia, cuota_al_dia=True, actividades_inscriptas=None):
+        self.dni = dni
+        self.nombre = nombre
+        self.tipo_membresia = tipo_membresia
+        self.cuota_al_dia = cuota_al_dia
+        # Si no le pasamos actividades, empieza con una lista vacía
+        self.actividades_inscriptas = actividades_inscriptas if actividades_inscriptas else []
+
+    def __str__(self):
+        estado = "Al día" if self.cuota_al_dia else "Deudor"
+        return f"DNI: {self.dni} | {self.nombre} | Pase: {self.tipo_membresia.upper()} | Estado: {estado}"
+
+class Gimnasio:
+    def __init__(self, nombre):
+        self.nombre = nombre
+        self.socios = {}       
+        self.asistencias = []        
+        self.membresias = {
+            "basico": ["musculacion"],
+            "platino": ["musculacion", "spinning"],
+            "pase libre": ["musculacion", "spinning", "crossfit"]
+        }
+        self.cupos_actividades = {
+            "musculacion": 50,
+            "spinning": 2,      
+            "crossfit": 20
+        }
+        # Al crear el gimnasio, intentamos cargar los datos guardados automáticamente
+        self.cargar_datos_desde_bloc()
+    #FUNCIÓN: GUARDAR EN BLOC DE NOTAS
+    def guardar_datos_en_bloc(self):
+        # Convertimos nuestro diccionario de objetos Socio en un diccionario de texto común
+        datos_a_guardar = {}
+        for dni, socio in self.socios.items():
+            datos_a_guardar[dni] = {
+                "nombre": socio.nombre,
+                "tipo_membresia": socio.tipo_membresia,
+                "cuota_al_dia": socio.cuota_al_dia,
+                "actividades_inscriptas": socio.actividades_inscriptas
+                }
+                # Abrimos (o creamos) el archivo 'base_datos.txt' y escribimos el JSON estructurado
+        with open("base_datos.txt", "w", encoding="utf-8") as archivo:
+            json.dump(datos_a_guardar, archivo, indent=4, ensure_ascii=False)
+        print("\n[Data] Datos guardados en 'base_datos.txt'.")
+    # --- NUEVA FUNCIÓN: CARGAR DESDE BLOC DE NOTAS ---
+    def cargar_datos_desde_bloc(self):
+        try:
+            # Intentamos abrir el archivo de texto
+            with open("base_datos.txt", "r", encoding="utf-8") as archivo:
+                datos_cargados = json.load(archivo)
+                                # Reconstruimos los objetos Socio a partir del texto del archivo
+                for dni, datos in datos_cargados.items():
+                    nuevo_socio = Socio(
+                        dni=dni,
+                        nombre=datos["nombre"],
+                        tipo_membresia=datos["tipo_membresia"],
+                        cuota_al_dia=datos["cuota_al_dia"],
+                        actividades_inscriptas=datos["actividades_inscriptas"]
+                    )
+                    self.socios[dni] = nuevo_socio
+            print("\n[Data] ¡Datos cargados con éxito desde el Bloc de Notas!")
+        except FileNotFoundError:
+            # Si el archivo no existe todavía (primera vez que corre), no pasa nada
+            print("\n[Data] No se encontró un archivo previo. Iniciando base de datos vacía.")
+
+    # --- GESTIÓN DE SOCIOS (Modificados para guardar al terminar) ---
+    def registrar_socio(self, dni, nombre, tipo_membresia):
+        if dni in self.socios:
+            print(f"\n[!] El socio con DNI {dni} ya existe.")
+            return
+        if tipo_membresia.lower() not in self.membresias:
+            print(f"\n[!] La membresía '{tipo_membresia}' no existe.")
+            return
+        self.socios[dni] = Socio(dni, nombre, tipo_membresia.lower())
+        print(f"\n[✓] Socio {nombre} registrado con éxito.")
+        self.guardar_datos_en_bloc() # <--- Guardamos el cambio
+
+    def registrar_pago(self, dni):
+        if dni in self.socios:
+            self.socios[dni].cuota_al_dia = True
+            print(f"\n[✓] Pago acreditado para {self.socios[dni].nombre}.")
+            self.guardar_datos_en_bloc() # <--- Guardamos el cambio
+        else:
+            print("\n[!] Socio no encontrado.")
+
+    def marcar_deudor(self, dni):
+        if dni in self.socios:
+            self.socios[dni].cuota_al_dia = False
+            print(f"\n[!] {self.socios[dni].nombre} ha sido marcado como DEUDOR.")
+            self.guardar_datos_en_bloc() # <--- Guardamos el cambio
+        else:
+            print("\n[!] Socio no encontrado.")
+
+    def inscribir_a_actividad(self, dni, actividad):
+        socio = self.socios.get(dni)
+        actividad = actividad.lower()
+        if not socio or actividad not in self.cupos_actividades or not socio.cuota_al_dia:
+            print("\n[!] Error en la inscripción. Verifique datos o estado de deuda.")
+            return
+        if actividad in socio.actividades_inscriptas:
+            print(f"\n[!] El socio ya está inscrito en {actividad}.")
+            return
+        socio.actividades_inscriptas.append(actividad)
+        print(f"\n[✓] ¡Inscripción exitosa de {socio.nombre} a {actividad}!")
+        self.guardar_datos_en_bloc() #Guardamos el cambio
+
+    def registrar_asistencia(self, dni, actividad):
+        socio = self.socios.get(dni)
+        actividad = actividad.lower()
+        if not socio or not socio.cuota_al_dia or actividad not in socio.actividades_inscriptas:
+            print("\n[X] ACCESO DENEGADO.")
+            return
+        hoy = datetime.date.today()
+        self.asistencias.append((hoy, dni, actividad))
+        print(f"\n[✓] ACCESO PERMITIDO para {socio.nombre}.")
+
+    def mostrar_estadisticas(self):
+        print(f"\n====== ESTADÍSTICAS ======")
+        print(f"Total de socios: {len(self.socios)}")
+
+    def listar_socios(self):
+        if not self.socios:
+            print("\nNo hay socios en el sistema.")
+            return
+        print("\n--- LISTADO GENERAL DE SOCIOS ---")
+        for s in self.socios.values():
+            print(s)
+#Menu Del Programa 
 while True:
     print("\n" + "="*35)
     print("  GYM GRUPO 41 ")
