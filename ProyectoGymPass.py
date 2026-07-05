@@ -129,17 +129,51 @@ class Gimnasio:
         for s in self.socios.values():
             print(s)
 #Menu Del Programa 
-while True:
-    print("\n" + "="*35)
-    print("  GYM GRUPO 41 ")
-    print("="*35)
-    print("1. Registrar nuevo Socio")
-    print("2. Registrar pago de cuota / Marcar deuda")
-    print("3. Inscribir socio a una Actividad")
-    print("4. Control de Acceso (Marcar Asistencia)")
-    print("5. Ver panel de Estadísticas")
-    print("6. Listar todos los socios")
-    print("7. Salir")
-    
-    opcion = input("\nSeleccione una opción (1-7): ").strip()
-    
+def menu():
+    gym = Gimnasio("Serpiente-Gym") 
+    while True:
+        print("\n" + "="*35)
+        print(f"  SISTEMA CON BLOC DE NOTAS: {gym.nombre.upper()}")
+        print("="*35)
+        print("1. Registrar nuevo Socio")
+        print("2. Registrar pago de cuota / Marcar deuda")
+        print("3. Inscribir socio a una Actividad")
+        print("4. Control de Acceso (Marcar Asistencia)")
+        print("5. Ver panel de Estadísticas")
+        print("6. Listar todos los socios")
+        print("7. Salir")
+        opcion = input("\nSeleccione una opción (1-7): ").strip()
+        if opcion == "1":
+            dni = input("DNI del socio: ").strip()
+            nombre = input("Nombre y Apellido: ").strip()
+            tipo_m = input("Seleccione pase (Basico / Platino / Pase Libre): ").strip()
+            if dni and nombre and tipo_m:
+                gym.registrar_socio(dni, nombre, tipo_m)
+        elif opcion == "2":
+            dni = input("DNI del socio: ").strip()
+            print("1. Registrar Pago\n2. Registrar Deuda")
+            sub_op = input("Opción: ").strip()
+            if sub_op == "1":
+                gym.registrar_pago(dni)
+            elif sub_op == "2":
+                gym.marcar_deudor(dni)
+        elif opcion == "3":
+            dni = input("DNI del socio: ").strip()
+            act = input("Nombre de la actividad: ").strip()
+            gym.inscribir_a_actividad(dni, act)
+        elif opcion == "4":
+            dni = input("Ingrese DNI: ").strip()
+            act = input("¿A qué actividad ingresa?: ").strip()
+            gym.registrar_asistencia(dni, act)
+        elif opcion == "5":
+            gym.mostrar_estadisticas()
+        elif opcion == "6":
+            gym.listar_socios()
+        elif opcion == "7":
+            print(f"\n¡Sistema cerrado! Datos a salvo.")
+            break
+        else:
+            print("\n[!] Opción no válida.")
+
+if __name__ == "__main__":
+    menu()
